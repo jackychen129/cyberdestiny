@@ -1,25 +1,22 @@
-/** Agent / Skill 一句话复制 — Web / Skill / 文档共用 */
+/** Agent 一句话复制 — Skill 专用 */
 
 export const GITHUB_REPO = 'jackychen129/cyberdestiny';
 export const GITHUB_REPO_URL = `https://github.com/${GITHUB_REPO}`;
+export const SKILL_PATH = '~/.cursor/skills/cyberdestiny/SKILL.md';
 
-export const AGENT_SKILL_PATHS = {
-  main: 'skills/cyberdestiny/SKILL.md',
-  infer: 'skills/cyberdestiny-infer/SKILL.md',
-  cursorMain: '~/.cursor/skills/cyberdestiny/SKILL.md',
-  cursorInfer: '~/.cursor/skills/cyberdestiny-infer/SKILL.md',
-} as const;
-
-/** 终端一句话：仅克隆并安装 Skill（GitHub 仓库仅含 Skill） */
-export function buildSkillCloneInstallOneLiner(cloneDir = 'cyberdestiny-skill'): string {
+/** 终端：克隆 + 构建 + 安装 Skill + 数据库 */
+export function buildSkillCloneInstallOneLiner(cloneDir = 'cyberdestiny'): string {
   return [
     `git clone ${GITHUB_REPO_URL}.git ${cloneDir}`,
     `cd ${cloneDir}`,
-    'node scripts/install-skill.mjs',
+    'docker compose up -d',
+    'pnpm install',
+    'pnpm build',
+    'pnpm skill:install',
+    'pnpm db:setup',
   ].join(' && ');
 }
 
-/** 生成 MCP 配置 JSON 字符串 */
 export function buildMcpConfigJson(
   mcpEntryPath: string,
   apiUrl = 'http://localhost:3001',
@@ -43,69 +40,63 @@ export function buildMcpConfigJson(
   );
 }
 
-/** 粘贴给 Cursor Agent：安装 Skill + 配置 MCP + 首次推演 */
+/** 粘贴 Cursor：全自动安装 + 首次推演 */
 export function buildAgentInstallOneLiner(
   apiUrl = 'http://localhost:3001',
   apiKey = 'cd_dev_local_key',
 ): string {
   return [
-    `请帮我安装 CyberDestiny Skill（${GITHUB_REPO_URL}，仅 Skill 仓库）：`,
+    `请帮我安装 CyberDestiny 命理 Skill（${GITHUB_REPO_URL}）：`,
     `1) 执行：${buildSkillCloneInstallOneLiner()}；`,
-    `2) 确保 CyberDestiny API 已运行于 ${apiUrl}，并配置 ~/.cursor/mcp.json（MCP 入口见本地平台 packages/mcp/dist/index.js）；`,
-    `CYBERDESTINY_API_KEY=${apiKey}；`,
-    `3) 读取 ${AGENT_SKILL_PATHS.cursorMain} 与 ${AGENT_SKILL_PATHS.cursorInfer}；`,
-    '4) 采集我的出生时辰、地点、性别后 profile_create，再 daily_fortune_get 并详细转述（禁止手算四柱）。',
+    `2) 启动 API：pnpm dev:api（${apiUrl}）；`,
+    `3) 确认 ~/.cursor/mcp.json 已配置 cyberdestiny MCP，API Key=${apiKey}；`,
+    `4) 读取 ${SKILL_PATH}；`,
+    '5) 采集出生时辰、地点、性别 → profile_create → daily_fortune_get 详细转述（禁止手算四柱）。',
   ].join('');
 }
 
-/** 启用 Skill + MCP 推演（Skill 已安装） */
+/** 启用 Skill（已安装） */
 export function buildAgentSkillPrompt(): string {
   return [
-    '请遵循',
-    AGENT_SKILL_PATHS.cursorMain,
-    '与',
-    AGENT_SKILL_PATHS.cursorInfer,
-    '，使用 CyberDestiny MCP 为我提供八字推演与每日运势；',
-    '禁止手算四柱，必须 profile_list → profile_create（若无档案）→ daily_fortune_get 或 destiny_infer，再按 Skill 转述详解。',
-  ].join(' ');
+    `请遵循 ${SKILL_PATH}，使用 CyberDestiny MCP 提供命理推演；`,
+    '禁止手算四柱，必须 profile_list → profile_create（若无档案）→ daily_fortune_get 或 destiny_infer，再按 Skill 详细转述。',
+  ].join('');
 }
 
-/** 订阅每日运势推送 */
 export function buildDailySubscribePrompt(profileId: string, pushHour = 8): string {
   return [
     '请用 CyberDestiny MCP：',
-    `对档案 profile_id=${profileId}`,
-    `调用 push_subscribe({ push_hour: ${pushHour} }) 订阅每日运势，`,
-    '再 daily_fortune_get 展示今日摘要、刑冲合害与行动建议，',
-    `并遵循 ${AGENT_SKILL_PATHS.cursorInfer} 转述。`,
+    `profile_id=${profileId} 调用 push_subscribe({ push_hour: ${pushHour} })，`,
+    '再 daily_fortune_get 展示今日摘要与行动建议，',
+    `按 ${SKILL_PATH} 转述。`,
   ].join('');
 }
 
-/** 立即获取今日运势 */
 export function buildDailyFortunePrompt(profileId?: string): string {
   if (profileId) {
     return [
       '请用 CyberDestiny MCP：',
-      `profile_id=${profileId} 调用 daily_fortune_get，`,
-      `按 ${AGENT_SKILL_PATHS.cursorInfer} 详细转述（含黄历、典籍、行动建议）。`,
+      `profile_id=${profileId} daily_fortune_get，`,
+      `按 ${SKILL_PATH} 详细转述。`,
     ].join('');
   }
   return [
-    '请用 CyberDestiny MCP：先 profile_list，无档案则 profile_create 采集出生时辰与地点，',
-    '再 daily_fortune_get，',
-    `按 ${AGENT_SKILL_PATHS.cursorInfer} 详细转述今日运势。`,
+    '请用 CyberDestiny MCP：profile_list → profile_create → daily_fortune_get，',
+    `按 ${SKILL_PATH} 转述。`,
   ].join('');
 }
 
-/** 登录用户：含 API Key 的完整接入 + 订阅 */
 export function buildAgentFullSetupPrompt(apiUrl: string, apiKey: string, profileId?: string): string {
   const sub = profileId
-    ? `对 profile_id=${profileId} push_subscribe({ push_hour: 8 })，`
-    : 'profile_list 后为我订阅每日 8 点运势，';
+    ? `push_subscribe({ profile_id: "${profileId}", push_hour: 8 })，`
+    : 'profile_list 后订阅每日运势，';
   return [
-    `请配置 CyberDestiny MCP（CYBERDESTINY_API_URL=${apiUrl}，CYBERDESTINY_API_KEY=${apiKey}），`,
-    `读取 ${AGENT_SKILL_PATHS.cursorInfer}，`,
+    `配置 CyberDestiny MCP（${apiUrl}，Key=${apiKey}），`,
+    `读取 ${SKILL_PATH}，`,
     sub,
-    '并 daily_fortune_get 展示今日运势。',
+    'daily_fortune_get 并转述。',
   ].join('');
 }
+
+// 兼容旧导出
+export const AGENT_SKILL_PATHS = { main: 'SKILL.md', infer: 'SKILL.md', cursorMain: SKILL_PATH, cursorInfer: SKILL_PATH };

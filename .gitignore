@@ -35,5 +35,5 @@ drizzle/meta/
 npm-debug.log*
 pnpm-debug.log*
 
-# Skill GitHub 子仓库 git 元数据
+# Skill GitHub 子仓库 git 元数据（已废弃）
 skill-github/.git/

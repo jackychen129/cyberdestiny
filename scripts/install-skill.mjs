@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 /**
- * 安装 CyberDestiny Cursor Skills
- * - 项目级：.cursor/skills/
- * - 个人级：~/.cursor/skills/
+ * 安装 CyberDestiny Skill 到 Cursor + 写入 MCP 配置
  */
 import fs from 'fs';
 import path from 'path';
@@ -11,53 +9,42 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, '..');
-const SKILL_NAMES = ['cyberdestiny', 'cyberdestiny-infer'];
+const SKILL_SRC = path.join(REPO_ROOT, 'SKILL.md');
+const SKILL_NAME = 'cyberdestiny';
 
-function copyDir(src, dest) {
-  fs.mkdirSync(dest, { recursive: true });
-  for (const name of fs.readdirSync(src)) {
-    const from = path.join(src, name);
-    const to = path.join(dest, name);
-    if (fs.statSync(from).isDirectory()) copyDir(from, to);
-    else fs.copyFileSync(from, to);
-  }
+function copySkill(destDir) {
+  fs.mkdirSync(destDir, { recursive: true });
+  const dest = path.join(destDir, SKILL_NAME, 'SKILL.md');
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  fs.copyFileSync(SKILL_SRC, dest);
+  console.log(`✓ Skill: ${dest}`);
 }
 
-function installTo(baseDir, label) {
-  for (const name of SKILL_NAMES) {
-    const src = path.join(REPO_ROOT, 'skills', name);
-    const dest = path.join(baseDir, name);
-    if (!fs.existsSync(src)) {
-      console.warn(`⚠ 跳过 ${name}：源目录不存在 ${src}`);
-      continue;
-    }
-    fs.rmSync(dest, { recursive: true, force: true });
-    copyDir(src, dest);
-    console.log(`✓ ${label}: ${dest}`);
-  }
-}
+copySkill(path.join(os.homedir(), '.cursor', 'skills'));
+copySkill(path.join(REPO_ROOT, '.cursor', 'skills'));
 
-const homeSkills = path.join(os.homedir(), '.cursor', 'skills');
-const projectSkills = path.join(REPO_ROOT, '.cursor', 'skills');
+const mcpEntry = path.join(REPO_ROOT, 'packages', 'mcp', 'dist', 'index.js');
+const mcpExample = {
+  mcpServers: {
+    cyberdestiny: {
+      command: 'node',
+      args: [mcpEntry],
+      env: {
+        CYBERDESTINY_API_URL: 'http://localhost:3001',
+        CYBERDESTINY_API_KEY: process.env.DEV_API_KEY ?? 'cd_dev_local_key',
+      },
+    },
+  },
+};
 
-installTo(homeSkills, '个人 Skill');
-installTo(projectSkills, '项目 Skill');
-
-const mcpExample = path.join(REPO_ROOT, '.cursor', 'mcp.json.example');
 const mcpDest = path.join(os.homedir(), '.cursor', 'mcp.json');
-const mcpPath = path.join(REPO_ROOT, 'packages', 'mcp', 'dist', 'index.js');
-
-if (fs.existsSync(mcpExample) && !fs.existsSync(mcpDest)) {
-  const raw = fs.readFileSync(mcpExample, 'utf8');
-  const filled = raw
-    .replace('__CYBERDESTINY_REPO__', REPO_ROOT)
-    .replace('__MCP_ENTRY__', mcpPath);
+if (!fs.existsSync(mcpDest)) {
   fs.mkdirSync(path.dirname(mcpDest), { recursive: true });
-  fs.writeFileSync(mcpDest, filled);
-  console.log(`✓ MCP 示例已写入 ${mcpDest}（首次安装）`);
-} else if (fs.existsSync(mcpDest)) {
-  console.log(`· MCP 已存在 ${mcpDest}，未覆盖`);
+  fs.writeFileSync(mcpDest, JSON.stringify(mcpExample, null, 2) + '\n');
+  console.log(`✓ MCP 配置: ${mcpDest}`);
+} else {
+  console.log(`· MCP 已存在 ${mcpDest}，请手动添加 cyberdestiny server`);
 }
 
-console.log('\n✅ CyberDestiny Skill 安装完成');
-console.log('  重启 Cursor 后在 Agent 对话粘贴 docs/SKILL_ONE_LINER.md 中的句子即可使用。');
+console.log('\n✅ 安装完成。启动 API: pnpm dev:api');
+console.log('   重启 Cursor 后粘贴 README 中的 Agent 启用句。');

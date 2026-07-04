@@ -393,11 +393,10 @@ export class InferenceService {
   }
 
   private toInferResponse(report: InferenceReport): DestinyInferResponse {
-    const webHost = this.config.get<string>('CORS_ORIGIN') ?? 'http://localhost:3000';
     return {
       report_id: report.report_id,
       summary: report.summary,
-      deep_link: `${webHost}/reports/${report.report_id}`,
+      deep_link: `report_get({ report_id: "${report.report_id}" })`,
       status: 'completed',
     };
   }
@@ -502,7 +501,6 @@ export class InferenceService {
       hasClash: (rules.clashes?.length ?? 0) > 0,
     });
 
-    const webHost = this.config.get<string>('CORS_ORIGIN') ?? 'http://localhost:3000';
     return {
       date: dateStr,
       profile_id: profileId,
@@ -524,7 +522,7 @@ export class InferenceService {
         solar_term: almanac.solar_term,
       },
       hexagram: { primary: hexagram.primary_hexagram, changed: hexagram.changed_hexagram },
-      deep_link: webHost + '/reports/' + reportId,
+      deep_link: 'report_get({ report_id: "' + reportId + '" })',
     };
   }
 
