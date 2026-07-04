@@ -10,6 +10,8 @@ import {
   getYearPillar,
   pillarToString,
   resolveLongitude,
+  computeShenSha,
+  crossValidateBaziZiwei,
   type BaziChart,
 } from '@cyberdestiny/chart-engine';
 import { API_VERSION, type InferenceReport } from '@cyberdestiny/shared';
@@ -122,6 +124,14 @@ export async function buildLifetimeReport(
 ): Promise<InferenceReport> {
   const natal = chartFor(ctx);
   const rules = ruleEngine.analyze(natal);
+  const shensha = computeShenSha(natal);
+  const cross = crossValidateBaziZiwei({
+    datetime: ctx.birthDatetime,
+    longitude: ctx.longitude,
+    birth_place: ctx.birthPlace,
+    hour_known: ctx.hourKnown,
+    gender: ctx.gender,
+  });
   const birthDate = new Date(ctx.birthDatetime);
   const age = computeAge(birthDate, ctx.asOfDate);
   const dayun = computeDaYun(natal.month, natal.year.stem_index, ctx.gender);
@@ -181,6 +191,23 @@ export async function buildLifetimeReport(
         basis: ['classic:道德经-知命', ...rules.basis],
         basis_type: 'classic',
       },
+      {
+        title: '神煞精要',
+        content: shensha.length
+          ? shensha.map((s) => `${s.name}（${s.pillar}柱）：${s.meaning}`).join('；')
+          : '本命神煞平和，无显著特殊标记。',
+        basis: shensha.map((s) => `chart_step:shensha:${s.name}:${s.pillar}`),
+        basis_type: 'chart_step',
+      },
+      {
+        title: '八字紫微交叉印证',
+        content: cross.summary,
+        basis: [
+          `chart_step:cross:score:${cross.alignment_score}`,
+          ...cross.strengths.map((s) => `chart_step:cross:${s}`),
+        ],
+        basis_type: 'chart_step',
+      },
     ],
     timeline: [...dayunTimeline, ...recentYears],
     recommendations: interpreted.recommendations,
@@ -190,6 +217,8 @@ export async function buildLifetimeReport(
     missing_inputs: ctx.hourKnown ? [] : ['birth_hour'],
     attached_artifacts: {
       bazi_chart: { natal: baziChartToRecord(natal), dayun },
+      shensha: shensha as unknown as Record<string, unknown>[],
+      bazi_ziwei_cross: cross as unknown as Record<string, unknown>,
     },
     practice_plan_id: null,
   };

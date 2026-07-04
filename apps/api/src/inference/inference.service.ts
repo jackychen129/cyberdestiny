@@ -14,6 +14,7 @@ import {
   pillarToString,
   computeAlmanac,
   getYearPillar,
+  computeShenSha,
 } from '@cyberdestiny/chart-engine';
 import {
   API_VERSION,
@@ -120,6 +121,7 @@ export class InferenceService {
     const completeness = buildCompletenessSection(missingInputs);
 
     const hexagram = castHexagramByTime(asOfDate);
+    const shensha = computeShenSha(natalChart);
 
     const reportId = uuidv4();
     const report: InferenceReport = {
@@ -137,6 +139,14 @@ export class InferenceService {
           basis: completeness.basis,
           basis_type: 'chart_step' as const,
         },
+        {
+          title: '神煞精要',
+          content: shensha.length
+            ? shensha.slice(0, 6).map((s) => `${s.name}：${s.meaning}`).join('；')
+            : '今日参看本命神煞平和。',
+          basis: shensha.map((s) => `chart_step:shensha:${s.name}`),
+          basis_type: 'chart_step' as const,
+        },
       ],
       timeline: [],
       recommendations: interpreted.recommendations,
@@ -151,6 +161,7 @@ export class InferenceService {
           true_solar: { applied: natalChart.true_solar_applied, longitude },
         },
         hexagram: hexagramToRecord(hexagram),
+        shensha: shensha as unknown as Record<string, unknown>[],
       },
       practice_plan_id: null,
     };

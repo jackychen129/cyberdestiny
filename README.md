@@ -1,6 +1,6 @@
 # CyberDestiny · 赛博天命
 
-**业界功能最全的 Cursor Agent 命理推演 Skill** — 八字、六爻、合盘、黄历、典籍 RAG、科学象意、修行径、日运订阅，一体化 MCP 驱动。
+**业界功能最全的 Cursor Agent 命理推演 Skill** — 八字、神煞、紫微、奇门、梅花、六壬、择日、六爻、合盘、黄历、典籍 RAG、科学象意、修行径、日运订阅，一体化 MCP 驱动。
 
 > 顺时而为，尽其天性 · 计算走引擎，释象走报告
 
@@ -13,9 +13,9 @@
 | 组件 | 作用 |
 |------|------|
 | `SKILL.md` | 教 Cursor/OpenClaw 何时调用、如何采集、如何转述 |
-| `packages/mcp` | 26 个 MCP 工具，Agent 专用接口 |
+| `packages/mcp` | 35 个 MCP 工具，Agent 专用接口 |
 | `apps/api` | 确定性排盘、规则引擎、报告生成 |
-| `packages/chart-engine` | 四柱、真太阳时、六爻、黄历 |
+| `packages/chart-engine` | 四柱、神煞、紫微、奇门、梅花、六壬、六爻、黄历、择日 |
 
 ## 一句话安装
 
@@ -37,11 +37,13 @@ pnpm dev:api
 
 ## 能力一览
 
-- **四柱八字** — 真太阳时、刑冲合害、十神、大运流年
+- **四柱八字** — 真太阳时、刑冲合害、十神、大运流年、神煞
+- **紫微斗数** — 十二宫盘 + 八字交叉印证（`ziwei_chart` / `bazi_ziwei_cross`）
+- **奇门梅花六壬** — 九宫奇门、梅花体用、大六壬三传、小六壬六宫
 - **推演尺度** — 日 / 周 / 年 / 一生（`destiny_infer`）
 - **六爻起卦** — 时间卦、数字卦（`hexagram_cast`）
 - **合盘** — 感情 / 合作 / 综合（`profile_pair`）
-- **黄历道历** — 宜忌、节气（`almanac_get`）
+- **黄历择日** — 宜忌、建除、时辰、活动择日（`almanac_*` / `zeri_select`）
 - **典籍 RAG** — 270+ 条：易经、道德、子平、天理（`classic_search`）
 - **科学象意** — 量子、复杂性科学（`science_search`）
 - **时事脉搏** — RSS 宏观主题（`world_pulse_get`）

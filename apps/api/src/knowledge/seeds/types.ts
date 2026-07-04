@@ -9,6 +9,8 @@ export interface KnowledgeSeed {
     | 'bazi'
     | 'tianli'
     | 'ziwei'
+    | 'qimen'
+    | 'meihua'
     | 'calendar'
     | 'neijing'
     | 'quantum'

@@ -16,6 +16,9 @@ export const AttachedArtifactsSchema = z.object({
   bazi_chart: z.record(z.unknown()).optional(),
   hexagram: z.record(z.unknown()).optional(),
   fengshui: z.record(z.unknown()).optional(),
+  shensha: z.array(z.record(z.unknown())).optional(),
+  ziwei: z.record(z.unknown()).optional(),
+  bazi_ziwei_cross: z.record(z.unknown()).optional(),
 });
 
 export const InferenceReportSchema = z.object({

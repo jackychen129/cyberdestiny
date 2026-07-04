@@ -1,8 +1,9 @@
 ---
 name: cyberdestiny
 description: >-
-  CyberDestiny 赛博天命 — 业界最全 Cursor 命理推演 Skill。覆盖八字四柱、真太阳时、
-  刑冲合害、日/周/年/一生推演、六爻起卦、合盘、黄历、270+ 典籍 RAG、科学象意、
+  CyberDestiny 赛博天命 — 业界最全 Cursor 命理推演 Skill。覆盖八字四柱、神煞、真太阳时、
+  刑冲合害、紫微斗数、奇门遁甲、梅花易数、大六壬、小六壬、择日、日/周/年/一生推演、
+  六爻起卦、八字紫微交叉印证、合盘、黄历、270+ 典籍 RAG、科学象意、
   时事脉搏、21 天修行径、日运订阅。用户问八字、运势、问事、改命、Agent 配置时使用。
   计算走 MCP 引擎，禁止 LLM 手算四柱。
 ---
@@ -41,9 +42,14 @@ git clone https://github.com/jackychen129/cyberdestiny.git && cd cyberdestiny &&
 | 推演 | `destiny_infer` `report_get` `report_qa` | day/week/year/lifetime |
 | 日运 | `daily_fortune_get` `push_subscribe` `push_inbox` | 免费日运 + 订阅 |
 | 六爻 | `hexagram_cast` | 时间/数字起卦 |
+| 梅花 | `meihua_cast` | 体用生克、数字/时间起卦 |
+| 奇门 | `qimen_chart` | 九宫门星神 |
+| 六壬 | `liuren_cast` `xiaoliuren_cast` | 大六壬四课三传 / 小六壬六宫 |
+| 紫微 | `ziwei_chart` `bazi_ziwei_cross` | 十二宫 + 八字交叉印证 |
+| 神煞 | `shensha_get` | 天乙、文昌、桃花等 |
 | 合盘 | `profile_pair` | 感情/合作/综合 |
-| 黄历 | `almanac_get` | 宜忌、日柱、节气 |
-| 典籍 | `classic_search` `knowledge_stats` | 易经/道德/子平/天理 |
+| 黄历 | `almanac_get` `almanac_enhanced` `zeri_select` | 宜忌、建除、择日评分 |
+| 典籍 | `classic_search` `knowledge_stats` | 易经/道德/子平/紫微/奇门 |
 | 现代 | `science_search` `world_pulse_get` `world_context_refresh` | 科学象意 + RSS 时事 |
 | 修行 | `practice_recommend` `practice_start_21day` `practice_check_in` | 21 天径 + 打卡 |
 | 案例 | `case_snapshot` | 报告快照 |
@@ -120,9 +126,29 @@ destiny_infer({ profile_id, scope, question?, question_type?, as_of? })
 ### C. 问事起卦
 
 ```
-hexagram_cast({ method: "time"|"number", question, numbers? })
-classic_search({ query: "世应" })
-→ 卦象 + 典籍 + 行动建议
+hexagram_cast({ method: "time"|"number", question, numbers? })   // 六爻
+meihua_cast({ method: "time"|"number", numbers? })               // 梅花
+qimen_chart({ datetime? })                                       // 奇门
+liuren_cast({ datetime? })                                       // 大六壬
+xiaoliuren_cast({ month?, day?, hour?, question? })              // 小六壬
+classic_search({ query: "体用" })
+→ 卦象/盘局 + 典籍 + 行动建议
+```
+
+### C2. 紫微与交叉印证
+
+```
+ziwei_chart({ profile_id }) 或 birth_datetime
+bazi_ziwei_cross({ profile_id })
+→ lifetime 报告亦含「八字紫微交叉印证」章节
+```
+
+### C3. 神煞与择日
+
+```
+shensha_get({ profile_id })
+almanac_enhanced({ date? })
+zeri_select({ start_date, end_date, activity: "marriage"|"travel"|... })
 ```
 
 ### D. 双人合盘
@@ -192,6 +218,9 @@ classic_search({ query, tradition?, fiction? })
 | bagua | 易经八卦 |
 | dao | 道德经等 |
 | bazi | 子平命理 |
+| ziwei | 紫微斗数 |
+| qimen | 奇门遁甲 |
+| meihua | 梅花易数 |
 | tianli | 天理原则 |
 | wuxing | 五行生克 |
 | neijing | 内经象意 |

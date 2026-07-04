@@ -157,7 +157,45 @@ async function main() {
   const inbox = await req('GET', `/push/inbox?profile_id=${profile.id}&limit=3`);
   console.log('✓ push inbox', inbox.items?.length, 'items');
 
-  console.log('\n✅ Phase 4 E2E passed');
+  const shensha = await req('GET', `/metaphysics/shensha?profile_id=${profile.id}`);
+  console.log('✓ shensha', shensha.shensha?.length, 'items');
+
+  const enhanced = await req('GET', '/metaphysics/almanac/enhanced');
+  console.log('✓ enhanced almanac', enhanced.jianchu);
+
+  const zeri = await req('POST', '/metaphysics/zeri', {
+    start_date: '2026-06-01',
+    end_date: '2026-06-07',
+    activity: 'travel',
+  });
+  console.log('✓ zeri', zeri.length, 'days');
+
+  const meihua = await req('POST', '/metaphysics/meihua', { method: 'number', numbers: [3, 5, 8] });
+  console.log('✓ meihua', meihua.hexagram);
+
+  const qimen = await req('GET', '/metaphysics/qimen');
+  console.log('✓ qimen ju', qimen.ju);
+
+  const liuren = await req('GET', '/metaphysics/liuren');
+  console.log('✓ liuren', liuren.san_chuan?.chu);
+
+  const xlr = await req('POST', '/metaphysics/xiaoliuren', { question: 'E2E' });
+  console.log('✓ xiaoliuren', xlr.result_palace);
+
+  const ziwei = await req('GET', `/metaphysics/ziwei?profile_id=${profile.id}`);
+  console.log('✓ ziwei', ziwei.ming_palace);
+
+  const cross = await req('GET', `/metaphysics/bazi-ziwei-cross?profile_id=${profile.id}`);
+  console.log('✓ bazi-ziwei cross', cross.alignment_score);
+
+  const lifetimeSections = lifetimeInfer.report_id
+    ? (await req('GET', `/reports/${lifetimeInfer.report_id}`)).sections?.map((s) => s.title)
+    : [];
+  if (lifetimeSections?.includes('八字紫微交叉印证')) {
+    console.log('✓ lifetime cross section');
+  }
+
+  console.log('\n✅ Phase 5 E2E passed');
 }
 
 main().catch((e) => {

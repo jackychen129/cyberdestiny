@@ -79,6 +79,136 @@ async function main() {
   );
 
   server.tool(
+    'almanac_enhanced',
+    '增强黄历：建除、彭祖、时辰宜忌、吉神凶煞、方位',
+    { date: z.string().optional().describe('YYYY-MM-DD') },
+    async ({ date }) => {
+      const q = date ? `?date=${date}` : '';
+      const result = await api.get(`/metaphysics/almanac/enhanced${q}`);
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    },
+  );
+
+  server.tool(
+    'zeri_select',
+    '择日：按活动类型对日期区间打分排序',
+    {
+      start_date: z.string().describe('YYYY-MM-DD'),
+      end_date: z.string().describe('YYYY-MM-DD'),
+      activity: z.enum(['marriage', 'travel', 'business', 'moving', 'general']).default('general'),
+    },
+    async (args) => {
+      const result = await api.post('/metaphysics/zeri', args);
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    },
+  );
+
+  server.tool(
+    'shensha_get',
+    '八字神煞：天乙、文昌、羊刃、桃花、华盖、驿马、红鸾、天喜等',
+    {
+      profile_id: z.string().uuid().optional(),
+      birth_datetime: z.string().optional(),
+      birth_place: z.string().optional(),
+      gender: z.enum(['male', 'female', 'unknown']).optional(),
+    },
+    async (args) => {
+      const { profile_id, ...body } = args;
+      const result = profile_id
+        ? await api.get(`/metaphysics/shensha?profile_id=${profile_id}`)
+        : await api.post('/metaphysics/shensha', body);
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    },
+  );
+
+  server.tool(
+    'meihua_cast',
+    '梅花易数起卦（数字或时间）',
+    {
+      method: z.enum(['number', 'time']).optional(),
+      numbers: z.array(z.number()).length(3).optional(),
+      as_of: z.string().optional(),
+    },
+    async (args) => {
+      const result = await api.post('/metaphysics/meihua', args);
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    },
+  );
+
+  server.tool(
+    'qimen_chart',
+    '奇门遁甲九宫盘',
+    { datetime: z.string().optional().describe('ISO 8601，默认当前') },
+    async ({ datetime }) => {
+      const q = datetime ? `?datetime=${encodeURIComponent(datetime)}` : '';
+      const result = await api.get(`/metaphysics/qimen${q}`);
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    },
+  );
+
+  server.tool(
+    'liuren_cast',
+    '大六壬四课三传',
+    { datetime: z.string().optional() },
+    async ({ datetime }) => {
+      const q = datetime ? `?datetime=${encodeURIComponent(datetime)}` : '';
+      const result = await api.get(`/metaphysics/liuren${q}`);
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    },
+  );
+
+  server.tool(
+    'xiaoliuren_cast',
+    '小六壬六宫占断',
+    {
+      month: z.number().int().optional(),
+      day: z.number().int().optional(),
+      hour: z.number().int().optional(),
+      question: z.string().optional(),
+    },
+    async (args) => {
+      const result = await api.post('/metaphysics/xiaoliuren', args);
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    },
+  );
+
+  server.tool(
+    'ziwei_chart',
+    '紫微斗数十二宫盘',
+    {
+      profile_id: z.string().uuid().optional(),
+      birth_datetime: z.string().optional(),
+      birth_place: z.string().optional(),
+      gender: z.enum(['male', 'female', 'unknown']).optional(),
+    },
+    async (args) => {
+      const { profile_id, ...body } = args;
+      const result = profile_id
+        ? await api.get(`/metaphysics/ziwei?profile_id=${profile_id}`)
+        : await api.post('/metaphysics/ziwei', body);
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    },
+  );
+
+  server.tool(
+    'bazi_ziwei_cross',
+    '八字与紫微交叉印证',
+    {
+      profile_id: z.string().uuid().optional(),
+      birth_datetime: z.string().optional(),
+      birth_place: z.string().optional(),
+      gender: z.enum(['male', 'female', 'unknown']).optional(),
+    },
+    async (args) => {
+      const { profile_id, ...body } = args;
+      const result = profile_id
+        ? await api.get(`/metaphysics/bazi-ziwei-cross?profile_id=${profile_id}`)
+        : await api.post('/metaphysics/bazi-ziwei-cross', body);
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    },
+  );
+
+  server.tool(
     'destiny_infer',
     '核心推演：生成完整命理报告',
     {

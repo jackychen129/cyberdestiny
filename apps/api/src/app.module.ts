@@ -12,6 +12,7 @@ import { AlmanacModule } from './almanac/almanac.module';
 import { ExportModule } from './export/export.module';
 import { AuthModule } from './auth/auth.module';
 import { OptionalAuthMiddleware } from './auth/optional-auth.middleware';
+import { MetaphysicsModule } from './metaphysics/metaphysics.module';
 import { HealthController } from './health.controller';
 
 @Module({
@@ -28,6 +29,7 @@ import { HealthController } from './health.controller';
     ExportModule,
     CasesModule,
     PushModule,
+    MetaphysicsModule,
   ],
   controllers: [HealthController],
 })

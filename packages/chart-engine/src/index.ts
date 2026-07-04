@@ -23,3 +23,12 @@ export {
   castHexagramByNumbers,
   hexagramToRecord,
 } from './liuyao/index';
+export { computeShenSha, type ShenShaItem } from './bazi/shensha';
+export { computeEnhancedAlmanac, type EnhancedAlmanac } from './almanac/enhanced';
+export { computeZeri, type ZeriRequest, type ZeriDayScore } from './almanac/zeri';
+export { meihuaByNumbers, meihuaByTime, type MeihuaChart } from './meihua/index';
+export { computeQimen, type QimenChart } from './qimen/index';
+export { computeLiuren, type LiurenChart } from './liuren/index';
+export { computeXiaoLiuren, type XiaoLiurenChart } from './xiaoliuren/index';
+export { computeZiweiChart, type ZiweiChart, type ZiweiPalace } from './ziwei/index';
+export { crossValidateBaziZiwei, type BaziZiweiCrossReport } from './cross/bazi-ziwei';

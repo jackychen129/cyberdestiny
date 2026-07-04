@@ -31,7 +31,7 @@ pnpm dev:check  # 健康检查
 请遵循 ~/.cursor/skills/cyberdestiny/SKILL.md，使用 CyberDestiny MCP 为我提供命理推演；禁止手算四柱，先 profile_list → profile_create（若无档案）→ daily_fortune_get 或 destiny_infer，再按 Skill 详细转述。
 ```
 
-## MCP 工具（26 个）
+## MCP 工具（35 个）
 
 见 [SKILL.md](../SKILL.md) 能力地图。
 
