@@ -29,7 +29,7 @@ export default function AgentPage() {
     <div className="space-y-8 max-w-2xl">
       <PageHeader
         title="Agent Skill 安装"
-        description="一句话克隆、配置 MCP、让 Cursor / OpenClaw 代你窥探天机。"
+        description="GitHub 仅含 Skill 文件。复制安装后，配合本地 CyberDestiny API / MCP 使用。"
       >
         <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">
           <Button variant="outline" className="gap-2">
@@ -47,7 +47,7 @@ export default function AgentPage() {
             <Badge variant="wood">推荐</Badge>
           </div>
           <CardDescription>
-            克隆仓库、构建 MCP、安装 Skill 到 ~/.cursor/skills/，并初始化数据库。
+            克隆 GitHub Skill 仓库并安装到 Cursor。推演引擎与 MCP 需在本地运行 API。
           </CardDescription>
           <CopyPrompt label="复制并在终端执行" text={shellInstall} />
         </Card>

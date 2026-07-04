@@ -13,6 +13,8 @@
     "db:push": "pnpm --filter @cyberdestiny/api db:push",
     "db:setup": "node scripts/setup-db.mjs",
     "skill:install": "node scripts/install-skill.mjs",
+    "skill:sync": "node scripts/sync-skill-github.mjs",
+    "skill:publish": "node scripts/publish-skill-github.mjs",
     "test:e2e": "node scripts/e2e-smoke.mjs",
     "test:e2e:full": "node scripts/e2e-full.mjs",
     "dev:check": "node scripts/dev-check.mjs",

@@ -17,72 +17,30 @@ description: CyberDestiny 赛博天命 — 命理推演 MCP/REST 集成 Skill。
 
 ## 安装与配置
 
-**GitHub（Skill 专用仓库）**：https://github.com/jackychen129/cyberdestiny
+**GitHub（本仓库，仅 Skill）**：https://github.com/jackychen129/cyberdestiny
 
-**一句话安装 Skill**（终端）：
+**一句话安装**：
 
 ```bash
 git clone https://github.com/jackychen129/cyberdestiny.git cyberdestiny-skill && cd cyberdestiny-skill && node scripts/install-skill.mjs
 ```
 
-完整 Web/API 平台在本地 monorepo 开发；GitHub **仅发布 Skill**。MCP 需本地部署 API，见 **`docs/AGENT_SETUP.md`**。
+MCP / API 需自行部署（默认 `http://localhost:3001`）。详见 `docs/AGENT_SETUP.md`。
 
-### 1. 构建 MCP
-
-```bash
-cd cyberdestiny && pnpm install && pnpm build
-```
-
-### 2. Cursor MCP 配置（`~/.cursor/mcp.json` 或项目 `.cursor/mcp.json`）
-
-```json
-{
-  "mcpServers": {
-    "cyberdestiny": {
-      "command": "node",
-      "args": ["/绝对路径/cyberdestiny/packages/mcp/dist/index.js"],
-      "env": {
-        "CYBERDESTINY_API_URL": "http://localhost:3001",
-        "CYBERDESTINY_API_KEY": "从 Web 设置页复制的 Personal API Key"
-      }
-    }
-  }
-}
-```
-
-### 3. 用户登录与 API Key
-
-1. Web 打开 http://localhost:3000/login → **Google 登录**（需配置 `GOOGLE_CLIENT_ID`）
-2. 进入 **设置** 复制 Personal API Key
-3. 填入 MCP 的 `CYBERDESTINY_API_KEY`
-4. Web 与 Agent **共享**档案、报告、积分
-
-本地无 Google 配置时可用 `DEV_API_KEY=cd_dev_local_key`（仅开发）。
-
-### 4. 安装本 Skill
+### 安装到 Cursor
 
 ```bash
-pnpm skill:install
+node scripts/install-skill.mjs
 ```
 
 - **个人级**：`~/.cursor/skills/cyberdestiny/` 与 `cyberdestiny-infer/`
-- **项目级**：`.cursor/skills/`（克隆仓库后自动可用）
+- **项目级**：克隆后 `.cursor/skills/` 可直接被 Cursor 发现
 
-### 5. 一句话复制（用户订阅 Agent）
-
-Web **设置 → Agent 一句话订阅** 或 **日运页** 提供复制按钮。用户粘贴到 Agent 对话即可触发 Skill + MCP 流程。
+### 一句话启用
 
 ```
-请遵循本项目 skills/cyberdestiny/SKILL.md 与 skills/cyberdestiny-infer/SKILL.md，使用 CyberDestiny MCP 为我提供八字推演与每日运势；禁止手算四柱，必须 profile_list → profile_create（若无档案）→ daily_fortune_get 或 destiny_infer，再按 Skill 转述详解。
+请遵循 ~/.cursor/skills/cyberdestiny/SKILL.md 与 ~/.cursor/skills/cyberdestiny-infer/SKILL.md，使用 CyberDestiny MCP 为我提供八字推演与每日运势；禁止手算四柱，必须 profile_list → profile_create（若无档案）→ daily_fortune_get 或 destiny_infer，再按 Skill 转述详解。
 ```
-
-订阅日运（替换 `{profile_id}`）：
-
-```
-请用 CyberDestiny MCP：对档案 profile_id={profile_id} 调用 push_subscribe({ push_hour: 8 }) 订阅每日运势，再 daily_fortune_get 展示今日摘要、刑冲合害与行动建议，并遵循 skills/cyberdestiny-infer/SKILL.md 转述。
-```
-
-模板源码：`packages/shared/src/agent-prompts.ts`
 
 ## 工具清单
 

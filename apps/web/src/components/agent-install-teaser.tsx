@@ -15,7 +15,7 @@ export function AgentInstallTeaser() {
         Agent Skill · 一句话安装
       </CardTitle>
       <CardDescription>
-        上架 GitHub，复制即装。Cursor / OpenClaw 共用同一推演引擎。
+        GitHub 仅发布 Skill。安装后配置本地 MCP 即可让 Agent 代你推演。
       </CardDescription>
       <CopyPrompt label="终端安装" text={buildSkillCloneInstallOneLiner()} />
       <div className="flex flex-wrap gap-2">

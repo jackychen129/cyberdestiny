@@ -95,23 +95,30 @@ pnpm --filter @cyberdestiny/chart-engine test
 pnpm --filter @cyberdestiny/eval test
 ```
 
-## Agent Skill 一句话安装
+## Agent Skill（GitHub 仅 Skill）
 
 [![GitHub](https://img.shields.io/github/stars/jackychen129/cyberdestiny?style=social)](https://github.com/jackychen129/cyberdestiny)
 
+**GitHub 仓库仅发布 Cursor Agent Skill**，不含完整 Web/API 源码。
+
 ```bash
-git clone https://github.com/jackychen129/cyberdestiny.git cyberdestiny && cd cyberdestiny && docker compose up -d && pnpm install && pnpm build && pnpm skill:install && pnpm db:setup
+git clone https://github.com/jackychen129/cyberdestiny.git cyberdestiny-skill && cd cyberdestiny-skill && node scripts/install-skill.mjs
 ```
 
-Web 复制入口：http://localhost:3000/agent · 文档：[docs/SKILL_ONE_LINER.md](docs/SKILL_ONE_LINER.md)
+本地完整平台开发：`pnpm skill:publish` 同步 Skill 到 GitHub。
 
-## Agent / MCP 接入
+Web 复制入口：http://localhost:3000/agent
 
-详见 **[docs/AGENT_SETUP.md](docs/AGENT_SETUP.md)** — Skill 安装、MCP 配置、API Key、Google 登录。
+## Agent / MCP 接入（本地平台）
 
-Skill 文件：`skills/cyberdestiny/SKILL.md` · 推演专精：`skills/cyberdestiny-infer/SKILL.md`
+详见 **[docs/AGENT_SETUP.md](docs/AGENT_SETUP.md)**。MCP 与 API 在本地 monorepo 运行。
 
-安装到 Cursor：`pnpm skill:install`（写入 `~/.cursor/skills/` 与项目 `.cursor/skills/`）
+Skill 源文件：`skills/cyberdestiny/` · 推演专精：`skills/cyberdestiny-infer/`
+
+```bash
+pnpm skill:install    # 安装到 ~/.cursor/skills/
+pnpm skill:publish    # 同步并推送 GitHub Skill 仓库
+```
 
 ## API 端点
 

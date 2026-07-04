@@ -10,16 +10,12 @@ export const AGENT_SKILL_PATHS = {
   cursorInfer: '~/.cursor/skills/cyberdestiny-infer/SKILL.md',
 } as const;
 
-/** 终端一句话：克隆 + 构建 + 安装 Skill */
-export function buildSkillCloneInstallOneLiner(cloneDir = 'cyberdestiny'): string {
+/** 终端一句话：仅克隆并安装 Skill（GitHub 仓库仅含 Skill） */
+export function buildSkillCloneInstallOneLiner(cloneDir = 'cyberdestiny-skill'): string {
   return [
     `git clone ${GITHUB_REPO_URL}.git ${cloneDir}`,
     `cd ${cloneDir}`,
-    'docker compose up -d',
-    'pnpm install',
-    'pnpm build',
-    'pnpm skill:install',
-    'pnpm db:setup',
+    'node scripts/install-skill.mjs',
   ].join(' && ');
 }
 
@@ -47,23 +43,22 @@ export function buildMcpConfigJson(
   );
 }
 
-/** 粘贴给 Cursor Agent：全自动安装 + 首次推演 */
+/** 粘贴给 Cursor Agent：安装 Skill + 配置 MCP + 首次推演 */
 export function buildAgentInstallOneLiner(
   apiUrl = 'http://localhost:3001',
   apiKey = 'cd_dev_local_key',
 ): string {
   return [
-    `请帮我完整安装 CyberDestiny（${GITHUB_REPO_URL}）：`,
-    `1) 若未克隆则执行：${buildSkillCloneInstallOneLiner()}；`,
-    '2) 启动 API（pnpm --filter @cyberdestiny/api dev）与 Web（pnpm --filter @cyberdestiny/web dev）；',
-    `3) 配置 ~/.cursor/mcp.json，MCP 入口为仓库内 packages/mcp/dist/index.js，`,
-    `CYBERDESTINY_API_URL=${apiUrl}，CYBERDESTINY_API_KEY=${apiKey}；`,
-    `4) 读取 ${AGENT_SKILL_PATHS.cursorMain} 与 ${AGENT_SKILL_PATHS.cursorInfer}；`,
-    '5) 采集我的出生时辰、地点、性别后 profile_create，再 daily_fortune_get 并详细转述（禁止手算四柱）。',
+    `请帮我安装 CyberDestiny Skill（${GITHUB_REPO_URL}，仅 Skill 仓库）：`,
+    `1) 执行：${buildSkillCloneInstallOneLiner()}；`,
+    `2) 确保 CyberDestiny API 已运行于 ${apiUrl}，并配置 ~/.cursor/mcp.json（MCP 入口见本地平台 packages/mcp/dist/index.js）；`,
+    `CYBERDESTINY_API_KEY=${apiKey}；`,
+    `3) 读取 ${AGENT_SKILL_PATHS.cursorMain} 与 ${AGENT_SKILL_PATHS.cursorInfer}；`,
+    '4) 采集我的出生时辰、地点、性别后 profile_create，再 daily_fortune_get 并详细转述（禁止手算四柱）。',
   ].join('');
 }
 
-/** 启用 Skill + MCP 推演（项目已安装） */
+/** 启用 Skill + MCP 推演（Skill 已安装） */
 export function buildAgentSkillPrompt(): string {
   return [
     '请遵循',
