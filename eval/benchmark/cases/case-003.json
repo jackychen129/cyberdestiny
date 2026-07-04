@@ -1,0 +1,13 @@
+{
+  "id": "case-003",
+  "description": "YYYYMMDDHHmm 快速输入",
+  "input": {
+    "profile": {
+      "quick_input": "200008151430",
+      "name": "测试丙"
+    },
+    "scope": "day"
+  },
+  "expected_themes": ["快速输入", "排盘"],
+  "reviewer_notes": "验证 quick_input 解析"
+}

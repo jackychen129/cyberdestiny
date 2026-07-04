@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "cyberdestiny": {
+      "command": "node",
+      "args": ["__MCP_ENTRY__"],
+      "env": {
+        "CYBERDESTINY_API_URL": "http://localhost:3001",
+        "CYBERDESTINY_API_KEY": "cd_dev_local_key"
+      }
+    }
+  }
+}

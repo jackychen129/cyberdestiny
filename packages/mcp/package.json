@@ -1,0 +1,26 @@
+{
+  "name": "@cyberdestiny/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "cyberdestiny-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "lint": "eslint src/",
+    "test": "echo 'no tests'"
+  },
+  "dependencies": {
+    "@cyberdestiny/shared": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.4.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "typescript": "^5.7.3"
+  }
+}

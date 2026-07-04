@@ -1,0 +1,18 @@
+{
+  "id": "case-002",
+  "description": "缺时辰女命 — 降精度模式",
+  "input": {
+    "profile": {
+      "name": "测试乙",
+      "gender": "female",
+      "birth_datetime": "1985-03-20T12:00:00+08:00",
+      "birth_hour_known": false
+    },
+    "scope": "day"
+  },
+  "expected_themes": ["缺时辰", "confidence降低"],
+  "chart_assertions": {
+    "hour_known": false
+  },
+  "reviewer_notes": "验证 missing_inputs 含 birth_hour"
+}

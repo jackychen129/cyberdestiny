@@ -1,0 +1,31 @@
+{
+  "name": "cyberdestiny",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "db:generate": "pnpm --filter @cyberdestiny/api db:generate",
+    "db:migrate": "pnpm --filter @cyberdestiny/api db:migrate",
+    "db:push": "pnpm --filter @cyberdestiny/api db:push",
+    "db:setup": "node scripts/setup-db.mjs",
+    "skill:install": "node scripts/install-skill.mjs",
+    "test:e2e": "node scripts/e2e-smoke.mjs",
+    "test:e2e:full": "node scripts/e2e-full.mjs",
+    "dev:check": "node scripts/dev-check.mjs",
+    "push:daily": "node scripts/daily-push-cron.mjs",
+    "world:refresh": "node scripts/world-context-cron.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.21.0"
+  }
+}

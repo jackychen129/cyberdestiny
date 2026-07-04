@@ -1,0 +1,15 @@
+{
+  "id": "case-014",
+  "description": "种子用例 014 — Phase 0 placeholder",
+  "input": {
+    "profile": {
+      "birth_datetime": "1995-05-15T08:00:00+08:00",
+      "name": "种子014"
+    },
+    "scope": "day"
+  },
+  "expected_themes": [
+    "placeholder"
+  ],
+  "reviewer_notes": "待命理师标注"
+}

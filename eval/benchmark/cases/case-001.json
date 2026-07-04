@@ -1,0 +1,21 @@
+{
+  "id": "case-001",
+  "description": "1990年成都午时男命 — 日运",
+  "input": {
+    "profile": {
+      "name": "测试甲",
+      "gender": "male",
+      "birth_datetime": "1990-06-15T12:00:00+08:00",
+      "birth_place": "成都",
+      "birth_hour_known": true
+    },
+    "scope": "day",
+    "as_of": "2026-06-29T08:00:00+08:00"
+  },
+  "expected_themes": ["日主", "五行", "日运气机"],
+  "chart_assertions": {
+    "has_four_pillars": true,
+    "true_solar_when_longitude": true
+  },
+  "reviewer_notes": "种子用例 — 验证四柱完整性与报告结构"
+}
